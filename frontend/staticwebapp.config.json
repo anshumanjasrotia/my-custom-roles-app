@@ -1,33 +1,49 @@
 {
-    "routes": [
-        {
-            "route": "/admin/*",
-            "allowedRoles": [ "admin" ]
-        },
-        {
-            "route": "/authenticated/*",
-            "allowedRoles": [ "authenticated" ]
-        }
-    ],
-    "auth": {
-        "rolesSource": "/api/GetRoles",
-        "identityProviders": {
-            "azureActiveDirectory": {
-                "userDetailsClaim": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-                "registration": {
-                    "openIdIssuer": "https://login.microsoftonline.com/4e02fed6-7f45-4a80-aca5-656dcdb9be5a",
-                    "clientIdSettingName": "AAD_CLIENT_ID",
-                    "clientSecretSettingName": "AAD_CLIENT_SECRET"
-                },
-                "login": {
-                    "loginParameters": [
-                        "resource=https://graph.microsoft.com"
-                    ]
-                }
-            }
-        }
+  "routes": [
+    {
+      "route": "/admin/*",
+      "allowedRoles": ["admin"]
     },
-    "globalHeaders": {
-        "Cache-Control": "no-cache"
+    {
+      "route": "/authenticated/*",
+      "allowedRoles": ["authenticated"]
     }
+  ],
+  "auth": {
+    "rolesSource": "/api/GetRoles",
+    "identityProviders": {
+      "customOpenIdConnectProviders": {
+        "aadb2c": {
+          "registration": {
+            "clientIdSettingName": "AADB2C_PROVIDER_CLIENT_ID",
+            "clientCredential": {
+              "clientSecretSettingName": "AADB2C_PROVIDER_CLIENT_SECRET"
+            },
+            "openIdConnectConfiguration": {
+              "wellKnownOpenIdConfiguration": "https://ycompanytest.onmicrosoft.com.b2clogin.com/<TENANT_NAME>.onmicrosoft.com/B2C_1_susi/v2.0/.well-known/openid-configuration"
+            }
+          },
+          "login": {
+            "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+            "scopes": [],
+            "loginParameterNames": []
+          }
+        }
+      },
+      "azureActiveDirectory": {
+        "userDetailsClaim": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/4e02fed6-7f45-4a80-aca5-656dcdb9be5a",
+          "clientIdSettingName": "AAD_CLIENT_ID",
+          "clientSecretSettingName": "AAD_CLIENT_SECRET"
+        },
+        "login": {
+          "loginParameters": ["resource=https://graph.microsoft.com"]
+        }
+      }
+    }
+  },
+  "globalHeaders": {
+    "Cache-Control": "no-cache"
+  }
 }
